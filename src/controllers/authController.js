@@ -8,12 +8,12 @@ export async function signUp(req, res) {
         try {
             const isUser = await usersCollection.findOne({email: user.email})
             if (isUser) {
-                return res.status(401).send("O usuário já existe!")
+                return res.status(409).send("O usuário já existe!")
             } else {
                 const hashPassword = bcrypt.hashSync(user.password, 10)
                 delete user.passwordConfirmation
                 await usersCollection.insertOne({...user, password: hashPassword})
-                res.sendStatus(200)
+                res.sendStatus(201)
             }
         } catch (err) {
             res.sendStatus(500)

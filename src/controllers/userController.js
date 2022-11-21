@@ -21,7 +21,7 @@ export async function makeTransaction(req, res) {
             balance = Number(transaction.cashValue).toFixed(2) 
             await transactionsCollection.insertOne({...transaction, cashValue: cash, userId: isAuthorized.userId, date: dayJsObject.format('DD/MM')}) 
             await balancesCollection.insertOne({balance, userId: isAuthorized.userId})
-            return res.sendStatus(200) 
+            return res.sendStatus(201) 
         } else if(transaction.type === "input"){
             balance = (Number(balanceExists.balance) + Number(transaction.cashValue)).toFixed(2)
         } else if(transaction.type === "output") {
@@ -33,7 +33,7 @@ export async function makeTransaction(req, res) {
     
         await transactionsCollection.insertOne({...transaction, cashValue: cash, userId: isAuthorized.userId, date: dayJsObject.format('DD/MM')})  
         await balancesCollection.updateOne({userId: isAuthorized.userId}, {$set: {balance: balance}}) 
-        res.sendStatus(200)
+        res.sendStatus(201)
     } catch {
         res.sendStatus(500) 
     }

@@ -10,7 +10,7 @@ try {
     await mongoClient.connect();
     db = mongoClient.db("mywallet");
     } catch {
-    console.log("Ocorreu um erro");
+    console.log("Erro na conexão com o servidor");
     }
 
 export const usersCollection = db.collection("users")
