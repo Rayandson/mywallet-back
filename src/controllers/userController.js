@@ -1,4 +1,5 @@
-import { sessionsCollection, transactionsCollection, balancesCollection, transactionSchema } from "../index.js";
+import { transactionSchema } from "../index.js";
+import { transactionsCollection, sessionsCollection, balancesCollection } from "../database/db.js"
 import dayjs from "dayjs";
 
 export async function makeTransaction(req, res) {
@@ -15,14 +16,12 @@ export async function makeTransaction(req, res) {
     try {
         console.log(token)
         const isAuthorized = await sessionsCollection.findOne({token});
-        console.log(isAuthorized)
         if(!isAuthorized) {
             res.sendStatus(401)
         }
 
 
         const balanceExists = await balancesCollection.findOne({userId: isAuthorized.userId})
-        console.log(balanceExists)
         let balance = 0;
         if(!balanceExists) {
             balance = Number(transaction.cashValue).toFixed(2) 
@@ -56,7 +55,7 @@ export async function getTransactions(req, res) {
             res.status(401).send("Usuário não autorizado")
         }
     
-        let transactions = await transactionsCollection.find({userId: isAuthorized.userId}).toArray()
+        let transactions = await (await transactionsCollection.find({userId: isAuthorized.userId}).toArray()).reverse()
         let balance = await balancesCollection.findOne({userId: isAuthorized.userId})
         
         if(transactions.length === 0) { 
