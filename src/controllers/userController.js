@@ -1,4 +1,3 @@
-import { transactionSchema } from "../index.js";
 import { transactionsCollection, sessionsCollection, balancesCollection } from "../database/db.js"
 import dayjs from "dayjs";
 
@@ -8,13 +7,7 @@ export async function makeTransaction(req, res) {
     const dayJsObject = dayjs();
     const cash = Number(transaction.cashValue).toFixed(2)
 
-    const validation = transactionSchema.validate(transaction, {abortEarly: false})
-    if(validation.error) {
-        return res.status(400).send(validation.error.details)
-    }
-
     try {
-        console.log(token)
         const isAuthorized = await sessionsCollection.findOne({token});
         if(!isAuthorized) {
             res.sendStatus(401)

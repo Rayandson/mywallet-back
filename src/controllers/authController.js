@@ -1,16 +1,9 @@
-import { signUpSchema, signInSchema } from "../index.js";
 import { usersCollection, sessionsCollection } from "../database/db.js"
 import bcrypt from "bcrypt";
 import { v4 as uuid } from 'uuid';
 
 export async function signUp(req, res) {
     const user = req.body;
-    
-    const validation = signUpSchema.validate(user, {abortEarly: false})
-    if(validation.error) {
-        const messages = validation.error.details.map((error) => error.message)
-        return res.status(400).send(messages)
-    }
 
         try {
             const isUser = await usersCollection.findOne({email: user.email})
@@ -30,12 +23,6 @@ export async function signUp(req, res) {
 
 export async function signIn(req, res) {
     const user = req.body;
-
-    const validation = signInSchema.validate(user, { abortEarly: false})
-    if(validation.error) {
-        const messages = validation.error.details.map((error) => error.message)
-        return res.status(400).send(messages)
-    }
 
     const token = uuid()
 
