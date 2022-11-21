@@ -15,5 +15,5 @@ try {
 
 export const usersCollection = db.collection("users")
 export const sessionsCollection = db.collection("sessions")
-export const transactionsCollection = db.collection("transactions")
+export const transactionsCollection = db.collection("transactions")   
 export const balancesCollection = db.collection("balances")

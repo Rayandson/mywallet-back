@@ -1,8 +1,9 @@
 export function validateToken(req, res, next) {
-    const token = req.headers.token;
+    const { authorization } = req.headers;
+    const token = authorization?.replace("Bearer ", "")
 
     if(!token) {
-        return res.sendStatus(401)
+        return res.sendStatus(409)
     }
 
     next()

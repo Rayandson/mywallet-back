@@ -2,10 +2,11 @@ import { transactionsCollection, sessionsCollection, balancesCollection } from "
 import dayjs from "dayjs";
 
 export async function makeTransaction(req, res) {
-    const token = req.headers.token;
+    const { authorization } = req.headers;
     const transaction = req.body;
     const dayJsObject = dayjs();
     const cash = Number(transaction.cashValue).toFixed(2)
+    const token = authorization?.replace("Bearer ", "")
 
     try {
         const isAuthorized = await sessionsCollection.findOne({token});
@@ -40,10 +41,11 @@ export async function makeTransaction(req, res) {
 }
 
 export async function getTransactions(req, res) { 
-    const token = req.headers.token
+    const { authorization } = req.headers;
+    const token = authorization?.replace("Bearer ", "")
 
     try {
-        const isAuthorized = await sessionsCollection.findOne({token})
+        const isAuthorized = await sessionsCollection.findOne({token}) 
         if(!isAuthorized) {
             res.status(401).send("Usuário não autorizado")
         }
